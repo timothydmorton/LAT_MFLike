@@ -120,7 +120,8 @@ class MFLike(_InstallableLikelihood):
                     n_bins = int(cov_mat.shape[0])
                     cov_mat = cov_mat[count * n_bins // 3:(count + 1) * n_bins // 3,
                               count * n_bins // 3:(count + 1) * n_bins // 3]
-        # Store inverted covariance matrix
+        # Store covariance matrix & inverse
+        self.cov_mat = cov_mat
         self.inv_cov = np.linalg.inv(cov_mat)
 
     def _read_spectra(self, fname):
