@@ -1,6 +1,10 @@
 import os
 import tempfile
 import unittest
+from distutils.version import LooseVersion
+
+import camb
+
 
 packages_path = os.environ.get("COBAYA_PACKAGES_PATH") or os.path.join(
     tempfile.gettempdir(), "LAT_packages"
@@ -28,7 +32,12 @@ nuisance_params = {
     "T_d": 9.60,
 }
 
-chi2s = {"tt": 1384.5669, "te": 1400.2760, "ee": 1428.7597, "tt-te-et-ee": 2412.9275}
+
+if LooseVersion(camb.__version__) < LooseVersion('1.3'):
+    chi2s = {"tt": 1384.5669, "te": 1400.2760, "ee": 1428.7597, "tt-te-et-ee": 2412.9275}
+else:
+    chi2s = {"tt": 1384.8184, "te": 1400.4507, "ee": 1428.8454, "tt-te-et-ee": 2413.10375}
+
 pre = "data_sacc_"
 
 
@@ -39,7 +48,6 @@ class MFLikeTest(unittest.TestCase):
         install({"likelihood": {"mflike.MFLike": None}}, path=packages_path, skip_global=True)
 
     def test_mflike(self):
-        import camb
 
         camb_cosmo = cosmo_params.copy()
         camb_cosmo.update({"lmax": 9000, "lens_potential_accuracy": 1})
